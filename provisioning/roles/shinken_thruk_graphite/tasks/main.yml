@@ -1,0 +1,9 @@
+---
+- name: Shinken Thruk Graphite monitoring solution
+  docker:
+    name: shinken_thruk_graphite
+    image: rohit01/shinken_thruk_graphite
+    state: reloaded
+    pull: missing
+    ports:
+    - "80:80"

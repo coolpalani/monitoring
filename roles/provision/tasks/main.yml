@@ -1,0 +1,69 @@
+---
+
+- name: delete icinga2 docker container
+  tags: docker,debug
+  docker:
+    name: icinga2
+    image: jordan/icinga2:latest
+    state: absent
+
+
+- name: run icinga2 docker image
+  tags: docker,debug
+  docker:
+    name: icinga2
+    image: jordan/icinga2:latest
+    state: restarted
+    pull: missing
+    ports:
+    - "80:80"
+    env:
+        ICINGA_PASSWORD: "{{ vault_icinga_password }}"
+        ICINGA_WEB_PASSWORD: "{{ vault_icinga_web_password }}"
+        ICINGAWEB2_PASSWORD: "{{ vault_icinga_web_password }}"
+        IDO_PASSWORD: "{{ vault_ido_password }}"
+        DEBIAN_SYS_MAINT_PASSWORD: "{{ vault_debian_sys_maint_password }}"
+
+
+# - name: debug info
+#   tags: docker,debug
+#   debug: msg="{{ docker_containers }}"
+
+- name: remove any old volume links
+  tags: docker
+  file: path=/root/icinga2 state=absent
+
+- name: create a link to the /etc/icinga2 docker volume
+  tags: docker
+  shell: ln -s $(docker inspect icinga2 | grep -B1 /etc/icinga2 | grep -o '/var/lib/docker.*_data') /root/icinga2
+  args:
+    creates: /root/icinga2
+
+
+- name: wait for icinga2 to add config files
+  tags: docker
+  wait_for: path=/root/icinga2/conf.d/users.conf
+
+
+- name: place custom host and service definitions
+  tags: docker
+  synchronize: src=files/conf.d/ dest=/root/icinga2/conf.d/
+
+- name: restart docker
+  tags: docker
+  command: docker restart icinga2
+# - name: restart docker
+#   tags: docker
+#   docker:
+#     name: icinga2
+#     image: jordan/icinga2:latest
+#     state: restarted
+#     pull: missing
+#     ports:
+#     - "80:80"
+#     env:
+#         ICINGA_PASSWORD: "{{ vault_icinga_password }}"
+#         ICINGA_WEB_PASSWORD: "{{ vault_icinga_web_password }}"
+#         ICINGAWEB2_PASSWORD: "{{ vault_icinga_web_password }}"
+#         IDO_PASSWORD: "{{ vault_ido_password }}"
+#         DEBIAN_SYS_MAINT_PASSWORD: "{{ vault_debian_sys_maint_password }}"

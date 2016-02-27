@@ -1,0 +1,10 @@
+---
+- hosts: monitoring
+  sudo: no
+  vars_files:
+    - vars/public.yml
+    - vars/private.yml
+  roles:
+    - role: pip
+    - role: docker
+    - role: provision

@@ -45,9 +45,17 @@
   wait_for: path=/root/icinga2/conf.d/users.conf
 
 
-- name: place custom host and service definitions
+- name: place custom object definitions
   tags: docker
   synchronize: src=files/conf.d/ dest=/root/icinga2/conf.d/
+
+# debug
+- name: debug
+  debug: msg="System {{ inventory_hostname }} has ip {{ ansible_eth0.ipv4.address }}"
+
+- name: compile and place host definitions
+  tags: docker
+  template: src=templates/hosts.conf.j2 dest=/root/icinga2/conf.d/hosts.conf
 
 - name: restart docker
   tags: docker

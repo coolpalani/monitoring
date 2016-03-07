@@ -25,6 +25,19 @@ Provision/Deploy. This can be run on a VPS in a clean state, or a VPS that has a
 
 
 
+## Icinga2 notes
+
+Validate config file
+
+```
+icinga2 daemon -C
+```
+
+Show all available services
+
+```
+icinga2 object list --type Service
+```
 
 ## Misc notes
 

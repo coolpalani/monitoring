@@ -1,4 +1,7 @@
 /*
+
+   fart on u
+
  * Host definitions with object attributes
  * used for apply rules for Service, Notification,
  * Dependency and ScheduledDowntime objects.
@@ -20,7 +23,7 @@ object Host NodeName {
   import "generic-host"
 
   /* Specify the address attributes for checks e.g. `ssh` or `http`. */
-  address = "127.0.0.1"
+  address = "{{ ansible_eth0.ipv4.address }}"
   address6 = "::1"
 
   /* Set custom attribute `os` for hostgroup assignment in `groups.conf`. */
@@ -31,9 +34,9 @@ object Host NodeName {
     http_uri = "/"
   }
   /* Uncomment if you've sucessfully installed Icinga Web 2. */
-  //vars.http_vhosts["Icinga Web 2"] = {
-  //  http_uri = "/icingaweb2"
-  //}
+  vars.http_vhosts["Icinga Web 2"] = {
+    http_uri = "/icingaweb2"
+  }
 
   /* Define disks and attributes for service apply rules in `services.conf`. */
   vars.disks["disk"] = {
@@ -50,3 +53,33 @@ object Host NodeName {
   }
 }
 
+
+
+
+/* */
+object Host "wunderground" {
+  import "generic-host"
+
+  /* Specify the address attributes for checks e.g. `ssh` or `http`. */
+  address = "wunderground.com"
+
+  /* Define custom variable which will be used to run URL check */
+  vars.check_url = "http://audioplayer.wunderground.com:80/KE7NWL/Spokane.mp3"
+  vars.http_vhost = "wunderground.com"
+  vars.http_uri = "http://audioplayer.wunderground.com:80/KE7NWL/Spokane.mp3"
+
+  /* Define http vhost attributes for service apply rules in `services.conf`. */
+  vars.http_vhosts["http"] = {
+    http_uri = "/"
+  }
+  /* Uncomment if you've sucessfully installed Icinga Web 2. */
+  //vars.http_vhosts["Icinga Web 2"] = {
+  //  http_uri = "/icingaweb2"
+  //}
+
+  /* Define notification mail attributes for notification apply rules in `notifications.conf`. */
+  vars.notification["mail"] = {
+    /* The UserGroup `icingaadmins` is defined in `users.conf`. */
+    groups = [ "icingaadmins" ]
+  }
+}

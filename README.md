@@ -2,7 +2,7 @@
 
 Ansible playbook for provisioning a monitoring server
 
-![A picture of two dudes in a dark room with a dozen LCD displays monitoring cameras and equipment in a water treatment facility. Bad ass monitoring tools.](/monitoring.jpg?raw=true "Monitor all the things!")
+![A picture of two dudes in a dark room with a dozen LCD displays monitoring cameras and equipment in a water treatment facility. Bad ass monitoring tools. source: http://scs.com/wp-content/uploads/2013/09/UWCORP_Water_Treatment_Plant_Monitoring.jpg](/monitoring.jpg?raw=true "Monitor all the things!")
 
 ## What it do
 

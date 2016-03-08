@@ -1,7 +1,0 @@
----
-- hosts: monitoring
-  sudo: no
-  roles:
-    - role: dependencies
-    - role: docker
-    - role: shinken_thruk_graphite

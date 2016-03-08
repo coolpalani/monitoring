@@ -18,11 +18,11 @@
     ports:
     - "80:80"
     env:
-        ICINGA_PASSWORD: "{{ vault_icinga_password }}"
-        ICINGA_WEB_PASSWORD: "{{ vault_icinga_web_password }}"
-        ICINGAWEB2_PASSWORD: "{{ vault_icinga_web_password }}"
-        IDO_PASSWORD: "{{ vault_ido_password }}"
-        DEBIAN_SYS_MAINT_PASSWORD: "{{ vault_debian_sys_maint_password }}"
+        ICINGA_PASSWORD: "{{ icinga_password }}"
+        ICINGA_WEB_PASSWORD: "{{ icinga_web_password }}"
+        ICINGAWEB2_PASSWORD: "{{ icinga_web_password }}"
+        IDO_PASSWORD: "{{ ido_password }}"
+        DEBIAN_SYS_MAINT_PASSWORD: "{{ debian_sys_maint_password }}"
 
 
 # - name: debug info
@@ -60,18 +60,5 @@
 - name: restart docker
   tags: docker
   command: docker restart icinga2
-# - name: restart docker
-#   tags: docker
-#   docker:
-#     name: icinga2
-#     image: jordan/icinga2:latest
-#     state: restarted
-#     pull: missing
-#     ports:
-#     - "80:80"
-#     env:
-#         ICINGA_PASSWORD: "{{ vault_icinga_password }}"
-#         ICINGA_WEB_PASSWORD: "{{ vault_icinga_web_password }}"
-#         ICINGAWEB2_PASSWORD: "{{ vault_icinga_web_password }}"
-#         IDO_PASSWORD: "{{ vault_ido_password }}"
-#         DEBIAN_SYS_MAINT_PASSWORD: "{{ vault_debian_sys_maint_password }}"
+
+- include: postfix.yml

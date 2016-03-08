@@ -1,7 +1,4 @@
 /*
-
-   fart on u
-
  * Host definitions with object attributes
  * used for apply rules for Service, Notification,
  * Dependency and ScheduledDowntime objects.
@@ -19,6 +16,11 @@
  */
 
 object Host NodeName {
+  /* who to notify of problems */
+  vars.notification["mail"] = {
+    groups = [ "admins "]
+  }
+
   /* Import the default host template defined in `templates.conf`. */
   import "generic-host"
 
@@ -56,12 +58,20 @@ object Host NodeName {
 
 
 
+
+
+
 /* */
 object Host "wunderground" {
   import "generic-host"
 
   /* Specify the address attributes for checks e.g. `ssh` or `http`. */
   address = "wunderground.com"
+
+  /* who to notify of problems */
+  vars.notification["mail"] = {
+    groups = [ "admins "]
+  }
 
   /* Define custom variable which will be used to run URL check */
   vars.check_url = "http://audioplayer.wunderground.com:80/KE7NWL/Spokane.mp3"

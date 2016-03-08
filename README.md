@@ -39,6 +39,16 @@ Show all available services
 icinga2 object list --type Service
 ```
 
+## Troubleshooting
+
+at one point, I was having difficulty getting postfix to relay mail to mailgun and then my email. I was getting this error in mailgun logs:
+
+```
+Failed: root@e5c68db50333 → xtoast@gmail.com 'hello friend' Server response: 550 550 5.7.1 [184.173.153.206 11] Our system has detected that this message is 5.7.1 not RFC 5322 compliant. To reduce the amount of spam sent to Gmail, 5.7.1 this message has been blocked. Please review 5.7.1 RFC 5322 specifications for more information. e136si4210349qhc.97 - gsmtp
+```
+
+I couldn't find exact 5.7.1 in RFC 5322, but section 5. is about formatting and whitespace. Checking mailgun logs, I saw that the message From: field had escaped quotes, `\"root\"` so what I did was disable user's ability to set their own From: address in the ssmtp config inside the docker container. `FromLineOverride=NO` in /etc/ssmtp/ssmtp.conf 
+
 ## Misc notes
 
 //sudo docker run -d -v "$(pwd)/custom_configs:/etc/shinken/custom_configs" -p 80:80 rohit01/shinken_thruk_graphite

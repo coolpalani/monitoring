@@ -5,3 +5,7 @@
 - name: icinga2
   src: k0st1an.icinga2
   path: roles/
+
+- name: postfix
+  src: tersmitten.postfix
+  path: roles/

@@ -4,8 +4,14 @@
   - debug: msg="domain--> {{ ansible_domain }}"
 
   - name: allow docker0 iface to connect to postfix
+    tags: lines
     command: sed -i '/^mynetworks/ s/$/ 172.17.0.0\/16/' /etc/postfix/main.cf
     notify: restart postfix
 
   - name: modify ssmtp to use host postfix
-    command: sed -ir -e 's/%(mailhub=).*/\1smtp-server/' -e 's/^.FromLineOverride.*/FromLineOverride=NO/' /etc/ssmtp/ssmtp.conf
+    tags: lines
+    command: sed -i -r -e 's/%(mailhub=).*/\1smtp-server/' /etc/ssmtp/ssmtp.conf
+
+  - name: modify ssmtp to not allow FromLineOverride
+    tags: lines
+    command: sed -i -r -e 's/^.FromLineOverride.*/FromLineOverride=NO/' /etc/ssmtp/ssmtp.conf

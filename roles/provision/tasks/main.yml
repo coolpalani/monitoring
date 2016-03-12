@@ -61,6 +61,10 @@
   tags: icinga2
   template: src=templates/contacts.conf.j2 dest=/root/icinga2/conf.d/contacts.conf
 
+- name: compile and place user definitions
+  tags: icinga2
+  template: src=templates/users.conf.js dest=/root/icinag2/conf.d/users.conf
+  
 - name: restart docker
   tags: docker
   command: docker restart icinga2

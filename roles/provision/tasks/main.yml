@@ -63,7 +63,7 @@
 
 - name: compile and place user definitions
   tags: icinga2
-  template: src=templates/users.conf.j2 dest=/root/icinag2/conf.d/users.conf
+  template: src=templates/users.conf.j2 dest=/root/icings2/conf.d/users.conf
   
 - name: restart docker
   tags: docker

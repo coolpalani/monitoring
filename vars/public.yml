@@ -6,6 +6,7 @@ debian_sys_maint_password: "{{ vault_debian_sys_maint_password }}"
 ido_password: "{{ vault_ido_password }}"
 icinga_password: "{{ vault_icinga_password }}"
 icinga_web_password: "{{ vault_icinga_web_password }}"
+icinga_admin_email: "{{ vault_icinga_admin_email }}"
 postfix_relayhost: "{{ vault_postfix_relayhost }}"
 postfix_relaytls: true
 postfix_sasl_user: "{{ vault_postfix_sasl_user }}"

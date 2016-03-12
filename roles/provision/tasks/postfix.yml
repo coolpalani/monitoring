@@ -8,10 +8,15 @@
     command: sed -i '/^mynetworks/ s/$/ 172.17.0.0\/16/' /etc/postfix/main.cf
     notify: restart postfix
 
-  - name: modify ssmtp to use host postfix
-    tags: lines
-    command: sed -i -r -e 's/%(mailhub=).*/\1smtp-server/' /etc/ssmtp/ssmtp.conf
+  # - name: create postfix alias database
+  #   command: newaliases
+  #   creates: /etc/aliases.db
+  #   notify: restart postfix
 
-  - name: modify ssmtp to not allow FromLineOverride
+  - name: modify ssmtp inside container to use host postfix
     tags: lines
-    command: sed -i -r -e 's/^.FromLineOverride.*/FromLineOverride=NO/' /etc/ssmtp/ssmtp.conf
+    command: docker exec -t icinga2 sed -i -e 's/mailhub=mail/mailhub=172.17.0.1/' /etc/ssmtp/ssmtp.conf
+
+  - name: modify ssmtp inside container to not allow FromLineOverride
+    tags: lines
+    command: docker exec -t icinga2 sed -i -r -e 's/^.FromLineOverride.*/FromLineOverride=NO/' /etc/ssmtp/ssmtp.conf

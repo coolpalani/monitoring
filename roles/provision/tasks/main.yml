@@ -54,8 +54,12 @@
   debug: msg="System {{ inventory_hostname }} has ip {{ ansible_eth0.ipv4.address }}"
 
 - name: compile and place host definitions
-  tags: docker
+  tags: icinga2
   template: src=templates/hosts.conf.j2 dest=/root/icinga2/conf.d/hosts.conf
+
+- name: compile and place contacts definitions
+  tags: icinga2
+  template: src=templates/contacts.conf.j2 dest=/root/icinga2/conf.d/contacts.conf
 
 - name: restart docker
   tags: docker

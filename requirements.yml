@@ -1,11 +1,14 @@
 - name: pip
   src: bobbyrenwick.pip
-  path: roles/
 
-- name: icinga2
-  src: k0st1an.icinga2
-  path: roles/
+- name: nagios
+  src: netlore.nagios
+
+- name: ufw
+  src: kbrebanov.ufw
+
+- name: apache2
+  src: PeterMosmans.apache2
 
 - name: postfix
   src: tersmitten.postfix
-  path: roles/

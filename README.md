@@ -10,35 +10,22 @@ it's an ansible playbook that takes docker compatible linux and puts a full moni
 
 First, ansible installs python pip and docker. Then, an icinga2 docker image (https://hub.docker.com/r/jordan/icinga2/) is downloaded and launched. The docker container initializes a fresh icinga2 instance. Then ansible copies over my custom host/service/admin definitions (over-wrinting stock configurations). Finally, the docker container is restarted, with the custom definitions in effect.
 
+
 ## Running procedure
 
-Make any desired changes to the Icinga host/service/user definitions.
+Make any desired changes to the Nagios host/service/user definitions
 
     `roles/provision/files/icinga2-config/conf.d/*.conf`
 
 Install ansible dependencies
 
-    ansible-galaxy install -r requirements.yml
+    ansible-galaxy install -r requirements.yml --roles-path ./roles
 
-Provision/Deploy. This can be run on a VPS in a clean state, or a VPS that has already run this playbook. Either way will work.
+Provision/Deploy. This can be run on a VPS in a clean state, or a VPS that has already run this playbook. Either way will work. In other words, run this to get started, and every time you make changes to the nagios host/service/user definitions in this repository. Note: you should not make changes directly on the VPS. Always make changes in this repository, commiting any changes.
 
-    ansible-playbook -i ~/.ansible-inventory ./provisioning/provision
+    ansible-playbook -i ~/.ansible-inventory --vault-password-file ~/.ansible-vault-password ./main.yml
 
 
-
-## Icinga2 notes
-
-Validate config file
-
-```
-icinga2 daemon -C
-```
-
-Show all available services
-
-```
-icinga2 object list --type Service
-```
 
 ## Troubleshooting
 
@@ -52,4 +39,8 @@ I couldn't find exact 5.7.1 in RFC 5322, but section 5. is about formatting and 
 
 ## Misc notes
 
-//sudo docker run -d -v "$(pwd)/custom_configs:/etc/shinken/custom_configs" -p 80:80 rohit01/shinken_thruk_graphite
+
+## Contributing
+
+This isn't really an open source project. It's an open-source file-defined infrastructure. Copy and enjoy!
+

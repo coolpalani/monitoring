@@ -1,0 +1,39 @@
+---
+
+- name: copy nagios global cfg to server
+  tags: provision
+  template: src=roles/provision/templates/nagios.cfg dest={{ nagios_config_dir }} owner=nagios group=nagios mode=u+rw,g+rw,o=r
+
+- name: delete unused nagios default objects
+  tags: provision
+  file: path={{ nagios_object_dir }}/{{ item.name }} state=absent
+  with_items:
+    - name: windows.cfg
+    - name: printer.cfg
+    - name: switch.cfg
+  
+- name: copy nagios object cfg to server
+  tags: provision
+  template: src=roles/provision/templates/objects/{{ item.name }} dest={{ nagios_object_dir }} owner=nagios group=nagios mode=u+rw,g+rw,o=r
+  with_items:
+    - name: commands.cfg
+    - name: contacts.cfg
+    - name: templates.cfg
+    - name: timeperiods.cfg
+    - name: localhost.cfg
+    - name: coolworld.cfg
+    - name: esuvee.cfg
+    - name: wxl86.cfg
+    - name: hostgroups.cfg
+    - name: xtoast.cfg
+    - name: grumpydale.cfg
+
+- name: verify configuration
+  tags: provision
+  command: /usr/local/nagios/bin/nagios --verify-config /usr/local/nagios/etc/nagios.cfg
+    
+- name: restart nagios
+  tags: provision
+  service: name=nagios state=restarted
+  
+  

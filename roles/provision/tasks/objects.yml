@@ -27,6 +27,8 @@
     - name: hostgroups.cfg
     - name: xtoast.cfg
     - name: grumpydale.cfg
+    - name: doomsquad.cfg
+    - name: grimtech.cfg    
 
 - name: verify configuration
   tags: provision

@@ -10,6 +10,7 @@
 - name: apache2
   #src: PeterMosmans.apache2
   src: https://github.com/insanity54/ansible-role-apache2
+  version: origin/insanity54-ubuntu1404
   # ^-- my fix for Ubuntu 14.04 using apache2.4 with /etc/apache2/conf-available
   #     instead of /etc/apache2/conf.d
 

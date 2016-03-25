@@ -13,4 +13,4 @@ postfix_sasl_user: "{{ vault_postfix_sasl_user }}"
 postfix_sasl_password: "{{ vault_postfix_sasl_password }}"
 install_thruk: True
 apache2_php: true
-apache2_open_basedir: "/usr/share/nagios3/htdocs"
+apache2_open_basedir: "/usr/local/nagios/share"

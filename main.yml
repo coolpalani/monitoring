@@ -6,5 +6,6 @@
     - vars/private.yml
   roles:
     - role: pip
-    - role: apache2    
+    - role: postfix
+    - role: apache2
     - role: nagios

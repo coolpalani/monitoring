@@ -9,3 +9,4 @@
     - role: postfix
     - role: apache2
     - role: nagios
+    - role: provision

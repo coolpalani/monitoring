@@ -22,3 +22,6 @@ apache2_open_basedir: "/usr/local/nagios/share"
 nagios_users:
   - user: nagiosadmin
     pass: "{{ vault_nagios_admin_password }}"
+nagios_object_dir: /usr/local/nagios/etc/objects/
+nagios_config_dir: /usr/local/nagios/etc/
+nagios_libexec_dir: /usr/local/nagios/libexec

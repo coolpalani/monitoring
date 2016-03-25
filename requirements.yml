@@ -2,7 +2,7 @@
   src: bobbyrenwick.pip
 
 - name: nagios
-  src: netlore.nagios
+  src: networklore.nagios
 
 - name: ufw
   src: kbrebanov.ufw

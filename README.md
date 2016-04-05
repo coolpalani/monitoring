@@ -17,6 +17,13 @@ Make any desired changes to the Nagios host/service/user definitions
 
     `roles/provision/files/icinga2-config/conf.d/*.conf`
 
+### Easy Mode
+
+    ./build && ./deploy
+
+
+### Hard Mode
+
 Install ansible dependencies
 
     ansible-galaxy install -r requirements.yml --roles-path ./roles

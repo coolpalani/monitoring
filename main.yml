@@ -1,10 +1,12 @@
 ---
 - hosts: monitoring
   sudo: no
+  gather_facts: no # disabled so dependencies role below has a chance to install python
   vars_files:
     - vars/public.yml
     - vars/private.yml
   roles:
+    - {role: dependencies, tags: dependencies}
     - {role: pip, tags: pip}
     - {role: ruby, tags: ruby}
     - {role: ufw, tags: ufw}

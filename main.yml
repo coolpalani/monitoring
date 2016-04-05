@@ -5,8 +5,10 @@
     - vars/public.yml
     - vars/private.yml
   roles:
-    - role: pip
-    - role: postfix
-    - role: apache2
-    - role: nagios
-    - role: provision
+    - {role: pip, tags: pip}
+    - {role: ruby, tags: ruby}
+    - {role: ufw, tags: ufw}
+    - {role: postfix, tags: postfix}
+    - {role: apache2, tags: apache2}
+    - {role: nagios, tags: nagios}
+    - {role: provision, tags: provision}

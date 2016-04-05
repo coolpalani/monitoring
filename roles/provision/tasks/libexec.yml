@@ -5,5 +5,5 @@
   copy: src=roles/provision/files/libexec/{{ item.name }} dest={{ nagios_libexec_dir }} owner=nagios group=nagios mode=u+rwx,g+rx,o+rx
   with_items:
     - name: check_minecraft
-  
-  
+    - name: check_webpage
+    - name: check_drupal

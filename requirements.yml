@@ -19,3 +19,5 @@
   src: https://github.com/insanity54/ansible-postfix
   # ^-- my fix for ansible raw variable deprecation
 
+- name: ruby
+  src: kbrebanov.ruby

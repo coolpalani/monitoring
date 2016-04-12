@@ -25,3 +25,13 @@ nagios_users:
 nagios_object_dir: /usr/local/nagios/etc/objects/
 nagios_config_dir: /usr/local/nagios/etc/
 nagios_libexec_dir: /usr/local/nagios/libexec
+ufw_ipv6: "no"
+ufw_rules:
+  - rule: "allow"
+    proto: "tcp"
+    src: "any"
+    to_port: 22
+  - rule: "allow"
+    proto: "tcp"
+    src: "any"
+    to_port: 80

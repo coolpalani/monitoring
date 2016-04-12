@@ -11,7 +11,7 @@
     - name: windows.cfg
     - name: printer.cfg
     - name: switch.cfg
-  
+
 - name: copy nagios object cfg to server
   tags: provision
   template: src=roles/provision/templates/objects/{{ item.name }} dest={{ nagios_object_dir }} owner=nagios group=nagios mode=u+rw,g+rw,o=r
@@ -28,14 +28,15 @@
     - name: xtoast.cfg
     - name: grumpydale.cfg
     - name: doomsquad.cfg
-    - name: grimtech.cfg    
+    - name: grimtech.cfg
+    - name: twobee.cfg
+    - name: foxxy.cfg
+    - name: worlds.cfg
 
 - name: verify configuration
   tags: provision
   command: /usr/local/nagios/bin/nagios --verify-config /usr/local/nagios/etc/nagios.cfg
-    
+
 - name: restart nagios
   tags: provision
   service: name=nagios state=restarted
-  
-  

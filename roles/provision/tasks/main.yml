@@ -1,19 +1,25 @@
 ---
 
 
-# - name: install apt dependencies
+# - name: install apt dependencies # redundant. takes place in ruby role
 #   tags: dependencies
 #   apt: name={{ item.name }} state=present
 #   with_items:
 #     - name: ruby
 #
-# - name: install ruby dependencies
-#   tags: dependencies
-#   gem: name={{ item.name }} state=latest
-#   with_items:
-#     - name: optiflag
-#     - name: hpricot
+# @todo switch to gem module in the future if gem module works bettwer with rubyenv
+# @todo make this idempotent!
+- name: install ruby dependencies
+  tags: dependencies
+  command: bash -lc "gem install {{ item.name }}"
+  with_items:
+    - name: optiflag
+    - name: hpricot
 
+
+- name: set locality for Perl
+  tags: dependencies
+  command: locale-gen en_US en_US.UTF-8 creates=/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION
 
 - include: postfix.yml
 - include: objects.yml

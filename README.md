@@ -34,6 +34,17 @@ Provision/Deploy. This can be run on a VPS in a clean state, or a VPS that has a
 
 
 
+### Updating nagios objects
+
+*1)* update the files
+
+* `./roles/provision/templates/objects`
+* `./roles/provision/tasks/objects.yml` (only needed if you're adding or removing an object)
+
+*2)* run `./deploy.sh`
+
+*3)* done
+
 ## Troubleshooting
 
 at one point, I was having difficulty getting postfix to relay mail to mailgun and then my email. I was getting this error in mailgun logs:
@@ -50,4 +61,3 @@ I couldn't find exact 5.7.1 in RFC 5322, but section 5. is about formatting and 
 ## Contributing
 
 This isn't really an open source project. It's an open-source file-defined infrastructure. Copy and enjoy!
-

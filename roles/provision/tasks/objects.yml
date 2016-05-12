@@ -32,6 +32,7 @@
     - name: twobee.cfg
     - name: foxxy.cfg
     - name: worlds.cfg
+    - name: doomsquad.cfg
 
 - name: verify configuration
   tags: provision

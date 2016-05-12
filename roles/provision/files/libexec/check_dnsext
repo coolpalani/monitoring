@@ -1,0 +1,230 @@
+#!/usr/bin/env perl
+#===============================================================================
+#
+#         FILE: check_dnsext
+#
+#        USAGE: ./check_dnsext
+#
+#  DESCRIPTION:
+#
+#      OPTIONS: ---
+# REQUIREMENTS: Net::DNS, Array::Compare
+#         BUGS: ---
+#        NOTES: ---
+#       AUTHOR: Natxo Asenjo (nasenjo@asenjo.nl),
+#      COMPANY:
+#      VERSION: 2.0
+#      CREATED: 10/26/2011 11:27:51 PM
+#     REVISION: ---
+#===============================================================================
+
+use strict;
+use warnings;
+
+# necessary libraries
+use Net::DNS;
+use Getopt::Long;
+use Pod::Usage;
+
+# variables
+my (
+    $host,    $help,    $server,   @exp_address, $type,
+    $version, $verbose, $resolver, @query_result
+);
+
+$version = '0.1';
+
+# unless specified in the cli, the standard query type is an A resource record
+$type = 'A';
+
+# unless specified as an option, debug is 0
+$verbose = 0;
+
+# we use the system nameservers defined in /etc/resolv.conf as default. If we
+# want to use another one, this will be defined
+$server = undef;
+
+# cli options
+Getopt::Long::Configure( "no_ignore_case", "bundling" );
+GetOptions(
+    'H|host=s'             => \$host,
+    'h|?|help'             => \$help,
+    's|server=s'           => \$server,
+    'a|expected-address=s' => \@exp_address,
+    't|type=s'             => \$type,
+    'v|verbose=i'          => \$verbose,
+);
+
+# show help unless $host is defined or $help is asked :-)
+pod2usage( -verbose => 2, -noperldoc => 1, ) if $help;
+pod2usage() unless ( $host and @exp_address );
+
+# create resolver object, specify specific nameserver if option selected in
+# the cli
+if ( defined $server ) {
+    $resolver = Net::DNS::Resolver->new(
+        nameservers => [ ($server) ],
+        debug => $verbose,
+    );
+}
+else {
+    $resolver = Net::DNS::Resolver->new( debug => $verbose, );
+}
+
+# define query
+my $query = $resolver->query( $host, $type );
+
+# if the query is successful, we will get an answer. Here we save the results
+# in different arrays because often there is more than one value in a query
+
+# uncomment the Data::Dumper lines to inspect the result for a new type rr
+if ($query) {
+    for my $rr ( $query->answer ) {
+    next unless $rr->type =~ m/^$type$/i;
+#        use Data::Dumper;
+#        $Data::Dumper::Useqq = 1;
+#        print Dumper $rr;
+        push( @query_result, $rr->exchange ) if $type =~ /^mx$/i;
+        push( @query_result, $rr->target )   if $type =~ /^srv$/i;
+        push( @query_result, $rr->address ) if $type =~ /^a$/i;
+        push( @query_result, $rr->cname ) if $type =~ /^cname$/i;
+        push( @query_result, $rr->char_str_list ) if $type =~ /^txt$/i;
+        push( @query_result, $rr->nsdname ) if $type =~ /^ns$/i;
+        push( @query_result, $rr->ptrdname ) if $type =~ /^ptr$/i;
+    }
+}
+else {
+    print "CRITICAL: dns $type RR query for $host returns ",
+        $resolver->errorstring, ", we wanted @exp_address\n";
+    exit 2;
+}
+
+# the @exp_address may have several commas separated values, remove the commas
+@exp_address = split(/,/,join(',',@exp_address)) ;
+
+# now compare bot the @query_result and @expected_addres arrays, if they
+# contain the same elements, all is good
+use Array::Compare;
+my $comparison = Array::Compare->new;
+
+if ( $comparison->perm( \@query_result, \@exp_address ) ) {
+    print "OK: dns $type RR query for $host returns @query_result\n";
+    exit 0;
+}
+else {
+    print "WARNING: dns $type RR query for $host returns @query_result but we expected @exp_address\n";
+    exit 1;
+}
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#  Application Documentation
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+=head1 NAME
+
+check_dnsext - nagios plugin to check dns queries
+
+=head1 DESCRIPTION
+
+Nagios plugin to check the dns forward resolution of hostnames. As opposed
+to the official nagios plugin check_dns, this plugin allows to specify
+types of dns resource records, like SRV, MX, TXT.
+
+=head1 VERSION
+
+This documentation refers to <check_dnsext> version 0.0.1
+
+=head1 USAGE
+
+check_dnsext -H hostname -a expected_addres [-t type -s server -v]
+
+=head1 REQUIRED ARGUMENTS
+
+-H | --host
+
+hostname (simple or fully qualified) or ip address that we want to
+check. This can also be a domain name (TLD) if checking a SOA, NS, MX
+resource record.
+
+-a | --expected-address
+
+Expected outcome of the dns query. If we expect a multi valued outcome, then
+use a comma to separate them. For example:
+
+--expected-address=host.domain.tld,host2.domain.tld,host3.domain.tld,...
+
+=head1 OPTIONS
+
+-H | --host
+
+hostname (simple or fully qualified) or ip address that we want to
+check. This can also be a domain name (TLD) if checking a SOA, NS, MX
+resource record.
+
+-a | --expected-address
+
+Expected outcome of the dns query. If we expect a multi valued outcome, then
+use a comma to separate them. For example:
+
+-s | --server
+
+dns server we want to use. If not specified, the default
+dns resolver of the system will be used.
+
+-t | --type
+
+type of dns resource record we want to query. If not
+specified, this defaults to an A record.
+
+-v | --verbose
+
+extra debugging info. Valid values are 0 (standard, no
+need to set it explicitely) or 1.
+
+-h | -? | --help
+
+this text
+
+=head1 CONFIGURATION AND ENVIRONMENT
+
+To use it in Nagios copy this file to your plugins folder (usually in
+/usr/local/nagios/libexec/ ). Make it executable for the nagios user.
+
+
+=head1 DEPENDENCIES
+
+This plugin requires the Net::DNS and the Array::Compare Perl modules. If you
+use a Redhat based linux distribution, you can install Net::DNS so:
+
+# yum install perl-Net-DNS
+
+The Array::Compare module is unfortunately not packaged in any of the
+usual yum repositories but building a spec file and creating a rpm
+package is for this one very straight forward. Dave Cross wrote a nice
+presentation showing how to achieve this: Perl in RPM-Land. You can read
+it in L<http://www.slideshare.net/davorg/perl-in-rpmland-presentation>
+
+If you use a debian based linux distribution, the modules are called
+libnet-dns-perl and libarray-compare-perl:
+
+# apt-get install libnet-dns-perl
+# apt-get install libarray-compare-perl
+
+If you use another system, you should probably have to use the cpan shell
+to install them. You could use perlbrew as well.
+
+=head1 AUTHOR
+
+Natxo Asenjo  (nasenjo@asenjo.nl_removethis_)
+
+=head1 LICENCE AND COPYRIGHT
+
+This module is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself. See perldoc perlartistic.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+dit mag weg
+=cut

@@ -33,6 +33,7 @@
     - name: foxxy.cfg
     - name: worlds.cfg
     - name: doomsquad.cfg
+    - name: imobso.cfg
 
 - name: verify configuration
   tags: provision

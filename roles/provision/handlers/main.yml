@@ -1,0 +1,11 @@
+---
+  - name: restart nagios
+    service: name=nagios state=stopped
+    notify: wait nagios
+
+  - name: wait nagios
+    command: sleep 30
+    notify: start nagios
+
+  - name: start nagios
+    service: name=nagios state=started

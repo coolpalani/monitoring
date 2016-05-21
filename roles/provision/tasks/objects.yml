@@ -38,7 +38,4 @@
 - name: verify configuration
   tags: provision
   command: /usr/local/nagios/bin/nagios --verify-config /usr/local/nagios/etc/nagios.cfg
-
-- name: restart nagios
-  tags: provision
-  service: name=nagios state=restarted
+  notify: restart nagios

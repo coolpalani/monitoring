@@ -8,3 +8,4 @@
     - name: check_webpage
     - name: check_drupal
     - name: check_dnsext
+  notify: restart nagios
